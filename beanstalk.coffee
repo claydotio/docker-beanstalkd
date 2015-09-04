@@ -66,6 +66,13 @@ class Beanstalk
         .onError reject
       .onError reject
 
+  ping: =>
+    new Promise (resolve, reject) =>
+      @queuer.stats()
+      .onSuccess resolve
+      .onError reject
+    .then -> null
+
 
 beanstalk = new Beanstalk()
 beanstalk.listen()
@@ -74,3 +81,5 @@ beanstalk.createJob {job: {x: 'y1'}, delaySeconds: 3, type: JOB_TYPES.DEFAULT}
 .then -> console.log 'created1'
 beanstalk.createJob {job: {x: 'y2'}, delaySeconds: 1, type: JOB_TYPES.DEFAULT}
 .then -> console.log 'created2'
+
+beanstalk.ping().then -> console.log 'pinged'
